@@ -20,23 +20,24 @@ def load_data():
         images.append(image)
     return images
 
-def pca(data):
+def pca(data, n=2):
     standardize_data = (data - np.mean(data, axis=0)) / np.std(data, axis=0, ddof=1)
     covariance_matrix = np.cov(standardize_data.T, ddof=1)
     eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
-    max_eigen_value_indices = (-eigen_values).argsort()[:2] # Finds indices of 2 highest eigen_values
+    max_eigen_value_indices = (-eigen_values).argsort()[:n] # Finds indices of n highest eigen_values
     
-    pca1 = np.dot(standardize_data, eigen_vectors[:,max_eigen_value_indices[0]])
-    pca2 = np.dot(standardize_data, eigen_vectors[:,max_eigen_value_indices[1]])
+    pca = []
+    for max_eigen_value_index in max_eigen_value_indices:
+        pca.append(np.dot(standardize_data, eigen_vectors[:,max_eigen_value_index]))
 
-    return pca1, pca2
+    return pca
 
 def main():
     images = load_data()
-    two_d_reduction = pca(images)
+    two_d_reduction_x, two_d_reduction_y = pca(images)
 
-    plt.plot(two_d_reduction[0], two_d_reduction[1], 'ro')
+    plt.plot(two_d_reduction_x, two_d_reduction_y, 'ro')
     plt.show()
 
 if __name__ == "__main__":
