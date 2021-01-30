@@ -51,14 +51,14 @@ def dimensionality_reduction_pca():
 def dimensionality_reduction_reconstruction():
     images = load_data()
 
-    video = cv2.VideoWriter('video.avi', 0, 1, (40, 40))
+    video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'mp4v'), 1, (40, 40))
+
+    standardize_data = standardize(images)
+    covariance_matrix = np.cov(standardize_data.T, ddof=1)
+    eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
 
     for k in range(1, 1601):
         print('Reconstructing with ' + str(k) + ' of the most relevant eigenvectors.')
-        standardize_data = standardize(images)
-        covariance_matrix = np.cov(standardize_data.T, ddof=1)
-        eigen_values, eigen_vectors = np.linalg.eig(covariance_matrix)
-
         max_eigen_value_indices = (-eigen_values).argsort()[:k] # Finds indices of n highest eigen_values
 
         pca = []
@@ -72,11 +72,14 @@ def dimensionality_reduction_reconstruction():
         np_relevantVectors = np.array(relevantVectors).T # Transpose it so our vectors fall along the columns
         np_pca = np.array(pca)
 
-        reconstruction_standardized = np.dot(np_pca.T, np_relevantVectors.T)
+        reconstruction_standardized = np.dot(np_pca.T, np_relevantVectors.T) # Based on equation, x^ = zW^T
         reconstruction = unstandardize(reconstruction_standardized, images)
         reshaped = reconstruction[0].reshape((40, 40)).astype(np.uint8)
 
-        video.write(reshaped)
+        img_filename = './temp/' + str(k) + '.jpeg'
+        Image.fromarray(reshaped).save(img_filename, 'JPEG', quality = 95)
+
+        video.write(cv2.imread(img_filename))
 
     cv2.destroyAllWindows()
     video.release()
