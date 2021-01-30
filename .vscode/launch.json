@@ -5,12 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "A1 Problem 2 Debugging",
+            "name": "A1 Problem 2 Debug",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/A1"
+            "cwd": "${workspaceFolder}/A1",
+            "args": ["p2"]
+        }, {
+            "name": "A1 Problem 3 Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/A1",
+            "args": ["p3"]
         }
     ]
 }
