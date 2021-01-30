@@ -74,7 +74,7 @@ def dimensionality_reduction_reconstruction():
 
         reconstruction_standardized = np.dot(np_pca.T, np_relevantVectors.T) # Based on equation, x^ = zW^T
         reconstruction = unstandardize(reconstruction_standardized, images)
-        reshaped = reconstruction[0].reshape((40, 40)).astype(np.uint8)
+        reshaped = reconstruction[0].reshape((40, 40)).astype(np.uint8) # Grab first image, reshape, and format to uint
 
         img_filename = './temp/' + str(k) + '.jpeg'
         Image.fromarray(reshaped).save(img_filename, 'JPEG', quality = 95)
