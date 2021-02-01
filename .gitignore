@@ -12,3 +12,4 @@ lib64
 *.pyc
 **/temp/*
 *.avi
+.DS_Store
