@@ -1,3 +1,4 @@
+.DS_Store
 .installed.cfg
 env
 develop-eggs
@@ -12,4 +13,3 @@ lib64
 *.pyc
 **/temp/*
 *.avi
-.DS_Store

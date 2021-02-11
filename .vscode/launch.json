@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "A1 Problem 2 Debug",
+            "name": "A1 P2 Debug",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -13,13 +13,20 @@
             "cwd": "${workspaceFolder}/A1",
             "args": ["p2"]
         }, {
-            "name": "A1 Problem 3 Debug",
+            "name": "A1 P3 Debug",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/A1",
             "args": ["p3"]
+        }, {
+            "name": "A2 Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/A2",
         }
     ]
 }
