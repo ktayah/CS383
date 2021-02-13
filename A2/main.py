@@ -44,7 +44,10 @@ def my_K_means(x, y, k):
 
         for i, k_vector in enumerate(k_vectors):
             # This labels the k_vector in the scatter plot as a red circle
-            ax.scatter(k_vector[0], k_vector[1], zs=k_vector[2], s=40, c=colors[i])
+            if x.shape[1] == 2:
+                ax.scatter(k_vector[0], k_vector[1], s=40, c=colors[i])
+            else:
+                ax.scatter(k_vector[0], k_vector[1], zs=k_vector[2], s=40, c=colors[i])
         
         # Initialize clusters dictionary
         clusters = {}
@@ -72,8 +75,12 @@ def my_K_means(x, y, k):
             _cluster = np.array(cluster)
             _x = _cluster[:,0]
             _y = _cluster[:,1]
-            _z = _cluster[:,2]
-            ax.scatter(_x, _y, zs=_z, c=colors[i], marker='x')
+
+            if _cluster.shape[1] == 3:
+                _z = _cluster[:,2]
+                ax.scatter(_x, _y, zs=_z, c=colors[i], marker='x')
+            else:
+                ax.scatter(_x, _y, c=colors[i], marker='x')
 
             # Calculate purity
             _cluster_label = np.array(cluster_labels[min_k_index])
