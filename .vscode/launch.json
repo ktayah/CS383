@@ -27,6 +27,13 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/A2",
-        }
+        }, {
+            "name": "A3 P3 Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/A3",
+        },
     ]
 }
