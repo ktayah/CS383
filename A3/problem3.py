@@ -1,7 +1,7 @@
 # Closed Form Linear Regression
 # Kevin Tayah
 # CS383
-import random, math
+from regression import Regression
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
@@ -91,39 +91,6 @@ def preprocess_4(data):
 
     return p4, useBias
 
-def validate(X, Y, w, b):
-    N = len(X)
-    Y_pred = np.dot(X, w) + b
-    rmse = math.sqrt((1/N) * sum((Y_pred - Y)**2))
-
-    return Y_pred, rmse
-
-def regression(X, Y, useBias):
-    N = len(X)
-
-    w = np.zeros(X.shape[1]) # weights
-    b = 0 # bias factor
-    l = 0.0001  # learning Rate
-    rmse = 0
-
-    while True:
-        Y_pred = np.dot(X, w) + b
-        D_w = (2 / N) * np.dot(X.T, (Y_pred - Y)) # ∂J/∂w
-        w -= l * D_w
-
-        if useBias:
-            D_b = (1/N) * np.sum(2 * (Y_pred - Y)) # ∂J/∂b
-            b -= l * D_b
-
-        new_rmse = math.sqrt((1/N) * sum((Y_pred - Y)**2))
-        if abs(rmse - new_rmse) < STOPPING_FACTOR:
-            rmse = new_rmse
-            break
-        else:
-            rmse = new_rmse
-    
-    return w, b, new_rmse
-
 def main():
     csv_file = 'insurance.csv'
 
@@ -144,14 +111,15 @@ def main():
     X_validate = data_validate[:len(data_validate), :len(data_validate[0]) - 1]
     Y_validate = data_validate[:len(data_validate), len(data_validate[0]) - 1]
     
-    weights, bias, rmse_train = regression(X_train, Y_train, useBias)
+    regression = Regression(X_train, Y_train, 0.1)
+    weights, bias, rmse_train = regression.fit(useBias)
 
     print('Training information')
     print('weights:', weights)
     print('bias:', bias)
     print('rmse:', rmse_train)
 
-    Y_pred, rmse_validate = validate(X_validate, Y_validate, weights, bias)
+    Y_pred, rmse_validate = regression.predict(X_validate, Y_validate, weights, bias)
 
     print('Validation info')
     print('rmse:', rmse_validate)
