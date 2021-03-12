@@ -1,29 +1,30 @@
 # Logistic Regression Classifier
 # Kevin Tayah
 # CS383
-import math
 import numpy as np
 
-np.random.seed(0) # seed can be inputed here
+EPOCHES = 1000
+LEARNING_RATE = 0.0001
 
-def standardize(data):
-    return (data - np.mean(data, axis=0)) / np.std(data, axis=0, ddof=1)
+class LogisticRegression:
+    def __init__(self, l = LEARNING_RATE, epoches = EPOCHES):
+        self.l = l
+        self.epoches = epoches
+        self.weights = None
 
-def load_data(file):
-    # Load csv file
-    data = np.genfromtxt(file, delimiter=',')
-    np.random.shuffle(data)
+    def _sigmoid(_, x):
+        return 1 / (1 + np.exp(-x))
 
-    splits = np.array_split(data, 3)
-    return np.concatenate((splits[0], splits[1])), splits[2]
-
-def main():
-    file = 'spambase.data'
-    train, validation = load_data(file)
+    def predict(self, X):
+        Y_pred = self._sigmoid(np.dot(X, self.weights))
+        Y_pred_classes = [1 if i > 0.5 else 0 for i in Y_pred]
+        return Y_pred_classes
     
-    # Standardize features
-    stdTrain = standardize(train[:,:-1])
-    stdValidation = standardize(validation[:,:-1])
+    def fit(self, X, y):
+        _, n_features = X.shape
+        self.weights = np.zeros(n_features)
 
-if __name__ == '__main__':
-    main()
+        for _ in range(self.epoches):
+            Y_pred = self._sigmoid(np.dot(X, self.weights))
+            D_w = np.dot(X.T, (y - Y_pred))
+            self.weights += self.l * D_w

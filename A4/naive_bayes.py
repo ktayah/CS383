@@ -1,55 +1,51 @@
 # Naive Bayes Classifier
 # Kevin Tayah
 # CS383
-import math
 import numpy as np
 
-np.random.seed(0) # seed can be inputed here
+EPSILON = 2**-23
 
-def standardize(data):
-    return (data - np.mean(data, axis=0)) / np.std(data, axis=0, ddof=1)
+class NaiveBayes:
+    def _gaussian_probability(self, x, c_index):
+        mean = self.mean[c_index]
+        var = self.var[c_index]
 
-def load_data(file):
-    # Load csv file
-    data = np.genfromtxt(file, delimiter=',')
-    np.random.shuffle(data)
+        return np.exp(-(x - mean)**2 / (2 * var**2)) / (var * np.sqrt(2 * np.pi))
 
-    splits = np.array_split(data, 3)
-    return np.concatenate((splits[0], splits[1])), splits[2]
+    def _calculate_nb(self, x):
+        posteriors = []
 
-def create_gaussian(data):
-    _, D = data.shape
-    gaussian = np.zeros(data.shape)
+        for c in self.classes:
+            c_index = int(c)
+            prior = np.log(self.priors[c_index])
+            prob = self._gaussian_probability(x, c_index) + EPSILON # Add a small value to avoid log(0)
+            class_conditionals = np.sum(np.log(prob))
 
-    for i in range(D):
-        feature = data[:,i]
-        featureMean = np.mean(feature)
-        featureStd = np.std(feature, ddof=1)
+            posterior = prior + class_conditionals
+            posteriors.append(posterior)
+        
+        return self.classes[np.argmax(posteriors)]
 
-        spamGaussian = (1 / (featureStd * math.sqrt(2 * math.pi))) * math.e ** (-((feature - featureMean)**2) / (2 * featureStd**2))
-        gaussian[:,i] = spamGaussian
-    
-    return gaussian
+    def predict(self, X):
+        prediction_y = [self._calculate_nb(x) for x in X]
+        return prediction_y
 
-def main():
-    file = 'spambase.data'
-    train, validation = load_data(file)
+    def fit(self, X, y):
+        n_samples, n_features = X.shape
+        self.classes = np.unique(y)
+        n_classes = len(self.classes)
 
-    # Standardize features and extract classes
-    stdTrain = standardize(train[:,:-1])
-    stdValidation = standardize(validation[:,:-1])
-    # trainClasses = train[:,-1:]
-    # validationClasses = train[:,-1:]
+        # initialize mean, variance, and priors for our features
+        self.mean = np.zeros((n_classes, n_features), dtype=np.float64)
+        self.var = np.zeros((n_classes, n_features), dtype=np.float64)
+        self.priors = np.zeros(n_classes, dtype=np.float64)
 
-    # Divide training data into Positive and Negative Samples
-    stdTrainSpam = stdTrain[train[:, len(train[0]) - 1] == 1]
-    stdTrainNotSpam = stdTrain[train[:, len(train[0]) - 1] == 0]
+        # set mean, variance, and priors for each of our features
+        for c in self.classes:
+            c_index = int(c)
+            X_c = X[c_index==y] # grab samples of all the same classes
+            X_c_n = X_c.shape[0]
 
-    # Create Guassian Models
-    spamGaussian = create_gaussian(stdTrainSpam)
-    notSpamGaussian = create_gaussian(stdTrainNotSpam)
-
-    print(spamGaussian, notSpamGaussian)
-
-if __name__ == '__main__':
-    main()
+            self.mean[c_index,:] = X_c.mean(axis=0)
+            self.var[c_index,:] = X_c.var(axis=0, ddof=1)
+            self.priors[c_index] = X_c_n / float(n_samples)
