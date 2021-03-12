@@ -1,3 +1,4 @@
 {
     "python.pythonPath": "/Users/ktayah/Programs/CS383/env/bin/python3",
+    "python.analysis.extraPaths": ["./A1", "./A2", "./A3", "./A4"]
 }

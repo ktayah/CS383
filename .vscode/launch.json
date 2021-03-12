@@ -35,12 +35,21 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/A3",
         }, {
-            "name": "A4 Debug",
+            "name": "A4 Debug - Naive Bayes",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/A4",
+            "args": ["nb"]
+        }, {
+            "name": "A4 Debug - Logistic Regression",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/A4",
+            "args": ["lr"]
         },
     ]
 }
