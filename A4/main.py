@@ -26,13 +26,13 @@ def precision(y_true, y_pred):
     true_positives = np.sum(y_true == y_pred)
     f_p_bools = [y_true[i] != y_p and y_p == 1 for i, y_p in enumerate(y_pred)]
     false_positives = np.sum(f_p_bools)
-    return true_positives / true_positives + false_positives
+    return true_positives / (true_positives + false_positives)
 
 def recall(y_true, y_pred):
     true_positives = np.sum(y_true == y_pred)
     f_n_bools = [y_true[i] != y_p and y_p == 0 for i, y_p in enumerate(y_pred)]
     false_negatives = np.sum(f_n_bools)
-    return true_positives / true_positives + false_negatives
+    return true_positives / (true_positives + false_negatives)
 
 def accuracy(y_true, y_pred):
     return np.sum(y_true == y_pred) / len(y_true)
